@@ -11,20 +11,19 @@ const socket = io.connect("http://localhost:5000");
 
 const Meetingpage = () => {
 
+    const history = useHistory();
     let { id } = useParams();
     const isAdmin = window.location.hash == "#init" ? true : false;
     const url = `${window.location.origin}${window.location.pathname}`;
-
-    const history = useHistory();
 
     const [streamObj, setStreamObj] = useState();
 
     useEffect(() => {
         initWebRTC();
         socket.on("code", (data) => {
-            peer.signal(data)
-        })
-    }, [])
+            peer.signal(data);
+        });
+    }, []);
 
     const BASE_URL = "http://localhost:5000";
     const SAVE_CALL_ID = "/api/save-call-id";
@@ -89,10 +88,11 @@ const Meetingpage = () => {
 
     return (
         <div className="container">
+            <video src="" controls></video>
             <div className="row">
                 <div className="col-6" >
                     my vid
-                    <video src="" controls></video>
+                    
                 </div>
                 <div className="col-6">
                     user vid
