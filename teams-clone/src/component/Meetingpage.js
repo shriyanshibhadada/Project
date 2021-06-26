@@ -4,6 +4,10 @@ import { useHistory, useParams } from 'react-router-dom';
 import Peer from 'simple-peer';
 import { postRequest, getRequest } from '../utils/RequestApis';
 import io from 'socket.io-client';
+import React from 'react';
+import { MDBIcon } from 'mdb-react-ui-kit';
+// import 'mdbreact/dist/css/mdb.css';
+import 'font-awesome/css/font-awesome.min.css'
 
 let peer = null;
 const socket = io.connect("http://localhost:5000");
@@ -110,17 +114,22 @@ const Meetingpage = () => {
                 <div className="col-6" >
                     {/* my vid */}
                     <video playsInline muted ref={myVideo} autoPlay />
-                    {/* <myvideo src="" controls></myvideo>  */}
                 </div>
                 <div className="col-6">
                     {/* user vid */}
-                    {/* <video src="" controls></video> */}
                     <video playsInline ref={userVideo} autoPlay />
                 </div>
             </div>
             <div className="row justify-content-md-center">
-            <div className = "col-md-auto">
-                    <button onClick={() => changeAudio(isAudio)} className="btn btn-danger">{isAudio ? `Mute Audio` :  `Unmute Audio`}</button>
+                <div  className = "col-md-auto">
+                    <button className="btn btn-info" onClick={() => navigator.clipboard.writeText(url)} >
+                        <i class="fa fa-copy"></i>
+                        {"   "}
+                        Copy Invite Link
+                    </button>
+                </div>
+                <div className = "col-md-auto">
+                    <button onClick={() => changeAudio(isAudio)} className="btn btn-warning">{isAudio ? `Mute Audio` :  `Unmute Audio`}</button>
                 </div>
                 <div className = "col-md-auto">
                     <button onClick={disconnectCall} className="btn btn-danger">Leave Call</button>
