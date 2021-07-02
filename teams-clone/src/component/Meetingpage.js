@@ -149,7 +149,12 @@ const Meetingpage = () => {
     const sendText = () => {
         sendmsg(msg);
         setMsg("");
+        post();
     }
+    
+    function post() {
+        document.getElementById("changeToEmpty").value = ''
+      }
 
 
 
@@ -211,11 +216,17 @@ const Meetingpage = () => {
                                     <input
                                         className="form-control"
                                         placeholder="Enter message"
-                                        onChange={(e) => changeMsg(e)}
+                                        id="changeToEmpty"
+                                        onChange={(e) => changeMsg(e) }
+                                        onKeyPress={event => {
+                                            if (event.key === 'Enter') {
+                                              sendText();
+                                            }
+                                          }}
                                     />
 
                                     <div className="input-group-append">
-                                        <button className="btn btn-outline-secondary" onClick={sendText}>
+                                        <button className="btn btn-outline-secondary" onClick={sendText} >
                                             <i class="fa fa-paper-plane"></i>
                                         </button>
 
