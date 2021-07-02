@@ -6,7 +6,6 @@ import { postRequest, getRequest } from '../utils/RequestApis';
 import io from 'socket.io-client';
 import React from 'react';
 import { MDBIcon } from 'mdb-react-ui-kit';
-// import 'mdbreact/dist/css/mdb.css';
 import 'font-awesome/css/font-awesome.min.css'
 
 let peer = null;
@@ -151,10 +150,10 @@ const Meetingpage = () => {
         setMsg("");
         post();
     }
-    
+
     function post() {
         document.getElementById("changeToEmpty").value = ''
-      }
+    }
 
 
 
@@ -172,12 +171,9 @@ const Meetingpage = () => {
         <div className="container">
             <div className="row" style={topmargin}>
                 <div className="col-9">
-                    <div className="row">
-                        <div className="col-6" >
-                            {/* my vid */}
-                            <video className="h-100 w-100" playsInline muted ref={myVideo} autoPlay />
-                        </div>
-                        <div className="col-6">
+                    <div className="row justify-content-md-center">
+
+                        <div className="col-md-auto h-75 w-75">
                             {/* user vid */}
                             <video className="h-100 w-100" playsInline ref={userVideo} autoPlay />
                         </div>
@@ -196,6 +192,10 @@ const Meetingpage = () => {
                         </div>
                         <div className="col-md-auto">
                             <button onClick={disconnectCall} className="btn btn-danger">Leave Call</button>
+                        </div>
+                        <div className="col-md-auto h-25 w-25" >
+                            {/* my vid */}
+                            <video className="h-100 w-100" playsInline muted ref={myVideo} autoPlay />
                         </div>
                     </div>
                 </div>
@@ -217,12 +217,12 @@ const Meetingpage = () => {
                                         className="form-control"
                                         placeholder="Enter message"
                                         id="changeToEmpty"
-                                        onChange={(e) => changeMsg(e) }
+                                        onChange={(e) => changeMsg(e)}
                                         onKeyPress={event => {
                                             if (event.key === 'Enter') {
-                                              sendText();
+                                                sendText();
                                             }
-                                          }}
+                                        }}
                                     />
 
                                     <div className="input-group-append">
@@ -237,7 +237,7 @@ const Meetingpage = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
