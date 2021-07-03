@@ -5,8 +5,8 @@ import Peer from 'simple-peer';
 import { postRequest, getRequest } from '../utils/RequestApis';
 import io from 'socket.io-client';
 import React from 'react';
-import { MDBIcon } from 'mdb-react-ui-kit';
 import 'font-awesome/css/font-awesome.min.css'
+import './style.css';
 
 let peer = null;
 const socket = io.connect("http://localhost:5000");
@@ -22,7 +22,6 @@ const Meetingpage = () => {
 
     const [streamObj, setStreamObj] = useState();
     const [isAudio, setIsAudio] = useState(true);
-    const [isMessenger, setIsMessenger] = useState(false);
     const [msg, setMsg] = useState("");
 
     useEffect(() => {
@@ -171,31 +170,19 @@ const Meetingpage = () => {
         <div className="container">
             <div className="row" style={topmargin}>
                 <div className="col-9">
-                    <div className="row justify-content-md-center">
-
-                        <div className="col-md-auto h-75 w-75">
-                            {/* user vid */}
-                            <video className="h-100 w-100" playsInline ref={userVideo} autoPlay />
-                        </div>
-                    </div>
-
-                    <div className="row justify-content-md-center">
-                        <div className="col-md-auto">
-                            <button className="btn btn-info" onClick={() => navigator.clipboard.writeText(url)} >
-                                <i class="fa fa-copy"></i>
-                                {"   "}
-                                Copy Invite Link
-                            </button>
-                        </div>
-                        <div className="col-md-auto">
-                            <button onClick={() => changeAudio(isAudio)} className="btn btn-warning">{isAudio ? `Mute Audio` : `Unmute Audio`}</button>
-                        </div>
-                        <div className="col-md-auto">
-                            <button onClick={disconnectCall} className="btn btn-danger">Leave Call</button>
-                        </div>
-                        <div className="col-md-auto h-25 w-25" >
-                            {/* my vid */}
-                            <video className="h-100 w-100" playsInline muted ref={myVideo} autoPlay />
+                    <div className="row">
+                        <div className="col-12 bg-dark position-relative" style={fullheight}>
+                            <div className="col h-100 w-100">
+                                <video className="h-100 w-100" playsInline ref={userVideo} autoPlay />
+                            </div>
+                            <div class="btn-group position-absolute bottom-0 start-0" role="group" aria-label="Basic outlined example">
+                                <button type="button" class="btn btn-outline-light" onClick={() => navigator.clipboard.writeText(url)} >Copy Invite Link</button>
+                                <button type="button" class="btn btn-outline-light" onClick={() => changeAudio(isAudio)}>{isAudio ? `Mute Audio` : `Unmute Audio`}</button>
+                                <button type="button" class="btn btn-outline-light" onClick={disconnectCall}>Leave Call</button>
+                            </div>
+                            <div className="position-absolute bottom-0 end-0 h-25 w-25">
+                                <video className="h-100 w-100" playsInline muted ref={myVideo} autoPlay />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -229,7 +216,6 @@ const Meetingpage = () => {
                                         <button className="btn btn-outline-secondary" onClick={sendText} >
                                             <i class="fa fa-paper-plane"></i>
                                         </button>
-
                                     </div>
                                 </div>
                             </div>

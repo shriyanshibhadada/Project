@@ -2,7 +2,6 @@ import { useHistory } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import shortid from "shortid";
 import './style.css';
-import { MDBIcon } from 'mdb-react-ui-kit';
 import 'font-awesome/css/font-awesome.min.css'
 
 const Landingpage = () => {
@@ -68,15 +67,6 @@ const Landingpage = () => {
                     </div>
                 </div>
             </section>
-            {/* </section><!-- End Hero --> */}
-            {/* <div style={fullheight} >
-                <div className="row align-items-center h-100">
-                    <div className="align-middle text-center">
-                        <h1>Click below to join the meeting</h1>
-                        <button type="button" className="btn btn-primary" onClick={startCall}>Start a meeting</button>
-                    </div>
-                </div>
-            </div> */}
         </div>
     );
 };
