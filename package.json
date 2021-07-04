@@ -4,7 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd teams-clone && npm run build",
+    "install-teams-clone": "cd teams-clone && npm install",
+    "heroku-postbuild": "npm run install-teams-clone && npm run build",
+    "start": "node index.js",
+    "teams-clone": "cd teams-clone && npm start",
+    "dev": "concurrently -n 'index,teams-clone' -c 'red,green'  \"nodemon index.js\" \"npm run teams-clone\""
   },
   "keywords": [],
   "author": "",

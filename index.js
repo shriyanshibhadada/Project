@@ -84,6 +84,9 @@ io.on("connection", (socket) => {
     }
 });
 
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static('teams-clone/build'))
+}
 
 server.listen(PORT, () => {
     console.log(`listening to server on ${PORT}`);

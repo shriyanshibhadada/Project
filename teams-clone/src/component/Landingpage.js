@@ -24,7 +24,7 @@ const Landingpage = () => {
                     <div class="row justify-content-center">
                         <div class="col-xl-7 col-lg-9 text-center">
                             <h1>Teams Clone</h1>
-                            <h2>Click the link below to start a meeting</h2>
+                            <h2>Click the button below to start a meeting</h2>
                         </div>
                     </div>
                     <div class="text-center">
