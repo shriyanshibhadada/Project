@@ -7,6 +7,8 @@ const cors = require('Cors');
 const { v4: uuidv4 } = require('uuid');
 const PORT = process.env.PORT || 5000;
 
+
+//make redis connection
 let redis = require('redis');
 client = redis.createClient();
 
