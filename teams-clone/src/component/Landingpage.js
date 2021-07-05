@@ -1,20 +1,53 @@
 import { useHistory } from 'react-router-dom';
+import React, { useRef, useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import shortid from "shortid";
 import './style.css';
 import 'font-awesome/css/font-awesome.min.css'
+import socket from '../socket';
+import random from 'random-name';
 
-const Landingpage = () => {
-    const history = useHistory();
+const Landingpage = (props) => {
+    const [err, setErr] = useState(false);
+    const [errMsg, setErrMsg] = useState('');
+    // const history = useHistory();
+    // const socket = io('/');
+    // const roomRef = useRef();
+    // const userRef = useRef();
+    // const startCall = () => {
+    //     const uid = shortid.generate();
+    //     history.push(`/${uid}#init`);
+    // };
+    useEffect(() => {
+        socket.on('FE-error-user-exist', ({ error }) => {
+            if (!error) {
+                const uid = shortid.generate();
+                const roomName = uid;
+                const userName =  'Admin';
+                console.log(roomName);
+                sessionStorage.setItem('user', userName);
+                props.history.push(`/${roomName}`);
+
+            } else {
+                setErr(error);
+                setErrMsg('User name already exist');
+            }
+        });
+    }, [props.history]);
 
     const startCall = () => {
         const uid = shortid.generate();
-        history.push(`/${uid}#init`);
-    };
+        const roomName = `${uid}`;
+        const userName = 'bcd';
 
-    const fullheight = {
-        height: (window.innerHeight) * 95 / 100,
-    };
+        if (!roomName || !userName) {
+            setErr(true);
+            setErrMsg('Enter Room Name or User Name');
+        } else {
+            socket.emit('BE-check-user', { roomId: roomName, userName });
+        }
+    }
+
 
     return (
         <div className="container d-flex justify-content-center align-items-center h-100">
@@ -28,7 +61,7 @@ const Landingpage = () => {
                         </div>
                     </div>
                     <div class="text-center">
-                        <div type="button" class="btn-get-started scrollto"  onClick={startCall} >Start Meeting</div>
+                        <div type="button" class="btn-get-started scrollto" onClick={startCall} >Start Meeting</div>
                     </div>
 
                     <div class="row icon-boxes">

@@ -10,14 +10,12 @@ function App() {
   return (
     <Router>
       <Switch>
-      <Route exact path="/">
-        <Landingpage />
+      <Route exact path="/" component={Landingpage}>
       </Route>
-      <Route path="/:id">
-        <Meetingpage />
+      <Route path="/:id" component={Meetingpage}>
       </Route>
-      <Route path="*">
-        <Notavailable />
+      <Route path="*" component={Notavailable}>
+        {/* <Notavailable /> */}
       </Route>
       </Switch>
     </Router>

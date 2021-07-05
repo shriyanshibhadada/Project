@@ -2,158 +2,329 @@ import { useEffect, useReducer, useState, useRef } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useHistory, useParams } from 'react-router-dom';
 import Peer from 'simple-peer';
-import { postRequest, getRequest } from '../utils/RequestApis';
-import io from 'socket.io-client';
 import React from 'react';
 import 'font-awesome/css/font-awesome.min.css'
 import './style.css';
+import random from 'random-name';
+import VideoCard from './VideoCard';
+import Chat from "./chat";
+import socket from '../socket';
 
-let peer = null;
-const socket = io.connect("http://localhost:5000");
 
-const Meetingpage = () => {
+const Meetingpage = (props) => {
 
     const history = useHistory();
-    let { id } = useParams();
-    const isAdmin = window.location.hash === "#init" ? true : false;
+    // let { id } = useParams();
+    // let { roomId } = useParams();
+    // const currentUser = 'abc';
     const url = `${window.location.origin}${window.location.pathname}`;
-    const myVideo = useRef();
-    const userVideo = useRef();
-
-    const [streamObj, setStreamObj] = useState();
-    const [isAudio, setIsAudio] = useState(true);
-    const [msg, setMsg] = useState("");
+    const currentUser = random.first();
+    // const currentUser = sessionStorage.getItem('user');
+    const [peers, setPeers] = useState([]);
+    const [userVideoAudio, setUserVideoAudio] = useState({
+        localUser: { video: true, audio: true },
+    });
+    const [videoDevices, setVideoDevices] = useState([]);
+    const [displayChat, setDisplayChat] = useState(false);
+    const [screenShare, setScreenShare] = useState(false);
+    const [showVideoDevices, setShowVideoDevices] = useState(false);
+    const peersRef = useRef([]);
+    const userVideoRef = useRef();
+    // const othervideo = useRef();
+    const screenTrackRef = useRef();
+    const userStream = useRef();
+    const roomId = props.match.params.roomId;
 
     useEffect(() => {
-        initWebRTC();
-        socket.on("code", (data) => {
-            peer.signal(data);
+        // Get Video Devices
+        navigator.mediaDevices.enumerateDevices().then((devices) => {
+            const filtered = devices.filter((device) => device.kind === 'videoinput');
+            setVideoDevices(filtered);
         });
-    }, []);
 
-    const BASE_URL = "http://localhost:5000";
-    const SAVE_CALL_ID = "/api/save-call-id";
-    const GET_CALL_ID = "/api/get-call-id";
+        // Set Back Button Event
+        window.addEventListener('popstate', goToBack);
 
-    const getRecieversCode = async () => {
-        const response = await getRequest(`${BASE_URL}${GET_CALL_ID}/${id}`);
-        if (response.code) {
-            peer.signal(response.code);
-        }
-    }
-
-    const MessageListReducer = (state, action) => {
-        let draftState = [...state];
-        switch (action.type) {
-            case "addMessage":
-                return [...draftState, action.payload];
-            default:
-                return state;
-        }
-    };
-    const [messageList, messageListReducer] = useReducer(
-        MessageListReducer,
-        []
-    );
-
-    const initWebRTC = () => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        // Connect Camera & Mic
+        navigator.mediaDevices
+            .getUserMedia({ video: true, audio: true })
             .then((stream) => {
-                setStreamObj(stream);
+                userVideoRef.current.srcObject = stream;
+                userStream.current = stream;
 
-                console.log(stream);
-                myVideo.current.srcObject = stream;
+                socket.emit('BE-join-room', { roomId, userName: currentUser });
+                socket.on('FE-user-join', (users) => {
+                    // all users
+                    const peers = [];
+                    users.forEach(({ userId, info }) => {
+                        let { userName, video, audio } = info;
 
+                        if (userName !== currentUser) {
+                            const peer = createPeer(userId, socket.id, stream);
 
-                peer = new Peer({
-                    initiator: isAdmin,
-                    trickle: false,
-                    stream: stream,
+                            peer.userName = userName;
+                            peer.peerID = userId;
+
+                            peersRef.current.push({
+                                peerID: userId,
+                                peer,
+                                userName,
+                            });
+                            peers.push(peer);
+
+                            setUserVideoAudio((preList) => {
+                                return {
+                                    ...preList,
+                                    [peer.userName]: { video, audio },
+                                };
+                            });
+                        }
+                    });
+
+                    setPeers(peers);
                 });
 
-                if (!isAdmin) {
-                    getRecieversCode();
-                }
+                socket.on('FE-receive-call', ({ signal, from, info }) => {
+                    let { userName, video, audio } = info;
+                    const peerIdx = findPeer(from);
 
-                peer.on("signal", async (data) => {
-                    if (isAdmin) {
-                        let payload = {
-                            id,
-                            signalData: data,
-                        };
-                        // console.log(payload);
-                        await postRequest(`${BASE_URL}${SAVE_CALL_ID}`, payload);
-                    } else {
-                        socket.emit("code", data, (callBackData) => {
-                            console.log("code sent")
+                    if (!peerIdx) {
+                        const peer = addPeer(signal, from, stream);
+
+                        peer.userName = userName;
+
+                        peersRef.current.push({
+                            peerID: from,
+                            peer,
+                            userName: userName,
+                        });
+                        setPeers((users) => {
+                            return [...users, peer];
+                        });
+                        setUserVideoAudio((preList) => {
+                            return {
+                                ...preList,
+                                [peer.userName]: { video, audio },
+                            };
                         });
                     }
                 });
 
-                peer.on("connect", () => {
-                    console.log("peer connected");
-                })
-
-                peer.on("data", (data) => {
-                    messageListReducer({
-                        type: "addMessage",
-                        payload: {
-                            user: "Other",
-                            msg: data.toString(),
-                            time: Date.now(),
-                        },
-                    })
+                socket.on('FE-call-accepted', ({ signal, answerId }) => {
+                    const peerIdx = findPeer(answerId);
+                    peerIdx.peer.signal(signal);
                 });
 
-                peer.on("stream", (stream) => {
-
-                    console.log(stream);
-                    userVideo.current.srcObject = stream;
+                socket.on('FE-user-leave', ({ userId, userName }) => {
+                    const peerIdx = findPeer(userId);
+                    peerIdx.peer.destroy();
+                    setPeers((users) => {
+                        users = users.filter((user) => user.peerID !== peerIdx.peer.peerID);
+                        return [...users];
+                    });
                 });
-            })
-            .catch(() => {
-                console.log('error');
-            })
-    };
+            });
 
-    const disconnectCall = () => {
-        peer.destroy();
-        history.push("/");
-        window.location.reload();
-    };
-    const changeAudio = (value) => {
-        streamObj.getAudioTracks()[0].enabled = !value;
-        setIsAudio(!value);
-    };
+        socket.on('FE-toggle-camera', ({ userId, switchTarget }) => {
+            const peerIdx = findPeer(userId);
 
-    const sendmsg = (msg) => {
-        peer.send(msg);
-        messageListReducer({
-            type: "addMessage",
-            payload: {
-                user: "You",
-                msg: msg,
-                time: Date.now(),
-            },
+            setUserVideoAudio((preList) => {
+                let video = preList[peerIdx.userName].video;
+                let audio = preList[peerIdx.userName].audio;
+
+                if (switchTarget === 'video') video = !video;
+                else audio = !audio;
+
+                return {
+                    ...preList,
+                    [peerIdx.userName]: { video, audio },
+                };
+            });
         });
-        // console.log(msg);
 
+        return () => {
+            socket.disconnect();
+        };
+        // eslint-disable-next-line
+    }, []);
+
+
+    function createPeer(userId, caller, stream) {
+        const peer = new Peer({
+            initiator: true,
+            trickle: false,
+            stream,
+        });
+
+        peer.on('signal', (signal) => {
+            socket.emit('BE-call-user', {
+                userToCall: userId,
+                from: caller,
+                signal,
+            });
+        });
+        peer.on('disconnect', () => {
+            peer.destroy();
+        });
+
+        return peer;
     }
 
-    const changeMsg = (e) => {
-        // console.log("executed");
-        setMsg(e.target.value);
+    function addPeer(incomingSignal, callerId, stream) {
+        const peer = new Peer({
+            initiator: false,
+            trickle: false,
+            stream,
+        });
+
+        peer.on('signal', (signal) => {
+            socket.emit('BE-accept-call', { signal, to: callerId });
+        });
+
+        peer.on('disconnect', () => {
+            peer.destroy();
+        });
+
+        peer.signal(incomingSignal);
+
+        return peer;
     }
-    const sendText = () => {
-        sendmsg(msg);
-        setMsg("");
-        post();
+
+    function findPeer(id) {
+        return peersRef.current.find((p) => p.peerID === id);
+    }
+
+    function createUserVideo(peer, index, arr) {
+        console.log(index);
+        return (
+            <div className="p-2 h-100 w-100" key={index}>
+                {writeUserName(peer.userName)}
+                <VideoCard key={index} peer={peer} number={arr.length} />
+            </div>
+        );
+    }
+
+    function writeUserName(userName, index) {
+        if (userVideoAudio.hasOwnProperty(userName)) {
+            if (!userVideoAudio[userName].video) {
+                return <div key={userName}>{userName}</div>;
+            }
+        }
+    }
+
+    // Open Chat
+    const clickChat = (e) => {
+        e.stopPropagation();
+        setDisplayChat(!displayChat);
+    };
+
+    // BackButton
+    const goToBack = (e) => {
+        e.preventDefault();
+        socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+        sessionStorage.removeItem('user');
+        window.location.href = '/';
+    };
+
+    const toggleCameraAudio = (e) => {
+        const target = e.target.getAttribute('data-switch');
+
+        setUserVideoAudio((preList) => {
+            let videoSwitch = preList['localUser'].video;
+            let audioSwitch = preList['localUser'].audio;
+
+            if (target === 'video') {
+                const userVideoTrack = userVideoRef.current.srcObject.getVideoTracks()[0];
+                videoSwitch = !videoSwitch;
+                userVideoTrack.enabled = videoSwitch;
+            } else {
+                const userAudioTrack = userVideoRef.current.srcObject.getAudioTracks()[0];
+                audioSwitch = !audioSwitch;
+
+                if (userAudioTrack) {
+                    userAudioTrack.enabled = audioSwitch;
+                } else {
+                    userStream.current.getAudioTracks()[0].enabled = audioSwitch;
+                }
+            }
+
+            return {
+                ...preList,
+                localUser: { video: videoSwitch, audio: audioSwitch },
+            };
+        });
+
+        socket.emit('BE-toggle-camera-audio', { roomId, switchTarget: target });
+    };
+
+    const clickScreenSharing = () => {
+        if (!screenShare) {
+            navigator.mediaDevices
+                .getDisplayMedia({ cursor: true })
+                .then((stream) => {
+                    const screenTrack = stream.getTracks()[0];
+
+                    peersRef.current.forEach(({ peer }) => {
+                        // replaceTrack (oldTrack, newTrack, oldStream);
+                        peer.replaceTrack(
+                            peer.streams[0]
+                                .getTracks()
+                                .find((track) => track.kind === 'video'),
+                            screenTrack,
+                            userStream.current
+                        );
+                    });
+
+                    // Listen click end
+                    screenTrack.onended = () => {
+                        peersRef.current.forEach(({ peer }) => {
+                            peer.replaceTrack(
+                                screenTrack,
+                                peer.streams[0]
+                                    .getTracks()
+                                    .find((track) => track.kind === 'video'),
+                                userStream.current
+                            );
+                        });
+                        userVideoRef.current.srcObject = userStream.current;
+                        setScreenShare(false);
+                    };
+
+                    userVideoRef.current.srcObject = stream;
+                    screenTrackRef.current = screenTrack;
+                    setScreenShare(true);
+                });
+        } else {
+            screenTrackRef.current.onended();
+        }
+    };
+
+    const expandScreen = (e) => {
+        const elem = e.target;
+
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+            /* Chrome, Safari & Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            /* IE/Edge */
+            elem.msRequestFullscreen();
+        }
+    };
+
+    const clickBackground = () => {
+        if (!showVideoDevices) return;
+
+        setShowVideoDevices(false);
     }
 
     function post() {
         document.getElementById("changeToEmpty").value = ''
     }
-
 
 
     // css starts here
@@ -172,22 +343,23 @@ const Meetingpage = () => {
                 <div className="col-9">
                     <div className="row">
                         <div className="col-12 bg-dark position-relative" style={fullheight}>
-                            <div className="col h-100 w-100">
-                                <video className="h-100 w-100" playsInline ref={userVideo} autoPlay />
+                            <div className="d-flex flex-row h-100 w-100">
+                                {peers && peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
                             </div>
                             <div class="btn-group position-absolute bottom-0 start-0" role="group" aria-label="Basic outlined example">
                                 <button type="button" class="btn btn-outline-light" onClick={() => navigator.clipboard.writeText(url)} >Copy Invite Link</button>
-                                <button type="button" class="btn btn-outline-light" onClick={() => changeAudio(isAudio)}>{isAudio ? `Mute Audio` : `Unmute Audio`}</button>
-                                <button type="button" class="btn btn-outline-light" onClick={disconnectCall}>Leave Call</button>
+                                <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='audio' >{userVideoAudio['localUser'].audio ? `Mute Audio` : `Unmute Audio`}</button>
+                                <button type="button" class="btn btn-outline-light" onClick={goToBack}>Leave Call</button>
                             </div>
                             <div className="position-absolute bottom-0 end-0 h-25 w-25">
-                                <video className="h-100 w-100" playsInline muted ref={myVideo} autoPlay />
+                                <video className="h-100 w-100" playsInline muted ref={userVideoRef} autoPlay />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="col-3">
-                    <div className="row">
+                    <Chat display={displayChat} roomId={roomId} />
+                    {/* <div className="row">
                         <div className="col-12 bg-light position-relative" style={fullheight}>
                             <div className="h-100 w-100 overflow-auto">
                                 {messageList.map((item) => (
@@ -195,7 +367,6 @@ const Meetingpage = () => {
                                         <h5 className="card-header">{item.user}</h5>
                                         <p className="card-body">{item.msg}</p>
                                     </div>
-
                                 ))}
                             </div>
                             <div className="position-absolute bottom-0 start-0 w-100 ">
@@ -220,7 +391,7 @@ const Meetingpage = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div >
