@@ -10,3 +10,4 @@
 * chat respnosivity
 * chat feature outside Video call
 * remove participant
+* List of people in the call
