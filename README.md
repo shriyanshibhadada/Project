@@ -8,3 +8,4 @@
 * Ask for user's name
 * Screen Share
 * chat respnosivity
+* chat feature outside Video call
