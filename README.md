@@ -2,11 +2,11 @@
 * Mute Audio
 * Copy invite link
 * chat feature
+* Hide video
+* Screen Share
 
 # Function to-do list
-* Hide video
 * Ask for user's name
-* Screen Share
 * chat respnosivity
 * chat feature outside Video call
 * remove participant
