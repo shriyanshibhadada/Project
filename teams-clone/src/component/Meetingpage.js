@@ -1,6 +1,5 @@
 import { useEffect, useReducer, useState, useRef } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useHistory, useParams } from 'react-router-dom';
 import Peer from 'simple-peer';
 import React from 'react';
 import 'font-awesome/css/font-awesome.min.css'
@@ -13,13 +12,10 @@ import socket from '../socket';
 
 const Meetingpage = (props) => {
 
-    const history = useHistory();
-    // let { id } = useParams();
-    // let { roomId } = useParams();
-    // const currentUser = 'abc';
     const url = `${window.location.origin}${window.location.pathname}`;
+    const roomId = props.match.params.roomId;
     const currentUser = random.first();
-    // const currentUser = sessionStorage.getItem('user');
+    sessionStorage.setItem('user', currentUser);
     const [peers, setPeers] = useState([]);
     const [userVideoAudio, setUserVideoAudio] = useState({
         localUser: { video: true, audio: true },
@@ -30,10 +26,9 @@ const Meetingpage = (props) => {
     const [showVideoDevices, setShowVideoDevices] = useState(false);
     const peersRef = useRef([]);
     const userVideoRef = useRef();
-    // const othervideo = useRef();
     const screenTrackRef = useRef();
     const userStream = useRef();
-    const roomId = props.match.params.roomId;
+    
 
     useEffect(() => {
         // Get Video Devices
@@ -58,10 +53,11 @@ const Meetingpage = (props) => {
                     const peers = [];
                     users.forEach(({ userId, info }) => {
                         let { userName, video, audio } = info;
-
+                        // console.log(userName);
                         if (userName !== currentUser) {
                             const peer = createPeer(userId, socket.id, stream);
-
+                            // console.log(currentUser);
+                            // console.log(UserName);
                             peer.userName = userName;
                             peer.peerID = userId;
 
@@ -148,7 +144,6 @@ const Meetingpage = (props) => {
         // eslint-disable-next-line
     }, []);
 
-
     function createPeer(userId, caller, stream) {
         const peer = new Peer({
             initiator: true,
@@ -195,10 +190,11 @@ const Meetingpage = (props) => {
     }
 
     function createUserVideo(peer, index, arr) {
-        console.log(index);
+        // console.log(index);
         return (
             <div className="p-2 h-100 w-100" key={index}>
                 {writeUserName(peer.userName)}
+                {/* {console.log(peer.userName)} */}
                 <VideoCard key={index} peer={peer} number={arr.length} />
             </div>
         );
@@ -211,12 +207,6 @@ const Meetingpage = (props) => {
             }
         }
     }
-
-    // Open Chat
-    const clickChat = (e) => {
-        e.stopPropagation();
-        setDisplayChat(!displayChat);
-    };
 
     // BackButton
     const goToBack = (e) => {
@@ -299,34 +289,6 @@ const Meetingpage = (props) => {
         }
     };
 
-    const expandScreen = (e) => {
-        const elem = e.target;
-
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-            /* Firefox */
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) {
-            /* Chrome, Safari & Opera */
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) {
-            /* IE/Edge */
-            elem.msRequestFullscreen();
-        }
-    };
-
-    const clickBackground = () => {
-        if (!showVideoDevices) return;
-
-        setShowVideoDevices(false);
-    }
-
-    function post() {
-        document.getElementById("changeToEmpty").value = ''
-    }
-
-
     // css starts here
     const fullheight = {
         height: (window.innerHeight) * 95 / 100,
@@ -349,7 +311,9 @@ const Meetingpage = (props) => {
                             <div class="btn-group position-absolute bottom-0 start-0" role="group" aria-label="Basic outlined example">
                                 <button type="button" class="btn btn-outline-light" onClick={() => navigator.clipboard.writeText(url)} >Copy Invite Link</button>
                                 <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='audio' >{userVideoAudio['localUser'].audio ? `Mute Audio` : `Unmute Audio`}</button>
+                                <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='video' >{userVideoAudio['localUser'].video ? `Hide video` : `show video`}</button>
                                 <button type="button" class="btn btn-outline-light" onClick={goToBack}>Leave Call</button>
+                                <button type="button" class="btn btn-outline-light" onClick={clickScreenSharing}>Share Screen</button>
                             </div>
                             <div className="position-absolute bottom-0 end-0 h-25 w-25">
                                 <video className="h-100 w-100" playsInline muted ref={userVideoRef} autoPlay />
@@ -359,39 +323,6 @@ const Meetingpage = (props) => {
                 </div>
                 <div className="col-3">
                     <Chat display={displayChat} roomId={roomId} />
-                    {/* <div className="row">
-                        <div className="col-12 bg-light position-relative" style={fullheight}>
-                            <div className="h-100 w-100 overflow-auto">
-                                {messageList.map((item) => (
-                                    <div className="card bg-white mt-1 mb-2">
-                                        <h5 className="card-header">{item.user}</h5>
-                                        <p className="card-body">{item.msg}</p>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="position-absolute bottom-0 start-0 w-100 ">
-                                <div className="input-group">
-                                    <input
-                                        className="form-control"
-                                        placeholder="Enter message"
-                                        id="changeToEmpty"
-                                        onChange={(e) => changeMsg(e)}
-                                        onKeyPress={event => {
-                                            if (event.key === 'Enter') {
-                                                sendText();
-                                            }
-                                        }}
-                                    />
-
-                                    <div className="input-group-append">
-                                        <button className="btn btn-outline-secondary" onClick={sendText} >
-                                            <i class="fa fa-paper-plane"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             </div>
         </div >

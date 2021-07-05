@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Chat = ({ display, roomId }) => {
     const currentUser = sessionStorage.getItem('user');
     const [msg, setMsg] = useState([]);
+    const [tempMsg, setTempMsg] = useState([]);
     const messagesEndRef = useRef(null);
     const inputRef = useRef();
 
@@ -25,13 +26,29 @@ const Chat = ({ display, roomId }) => {
     const sendMessage = (e) => {
         if (e.key === 'Enter') {
             const msg = e.target.value;
-
             if (msg) {
                 socket.emit('BE-send-message', { roomId, msg, sender: currentUser });
                 inputRef.current.value = '';
             }
         }
     };
+
+    const changeMsg = (e) => {
+        const a = e.target.value;
+        setTempMsg(a);
+        // console.log(tempMsg);
+    };
+
+    const sendMessage2 = () => {
+        console.log(tempMsg);
+        const msg = tempMsg;
+        if (msg) {
+            socket.emit('BE-send-message', { roomId, msg, sender: currentUser });
+            inputRef.current.value = '';
+        }
+    }
+
+    //some css
     const fullheight = {
         height: (window.innerHeight) * 95 / 100,
     };
@@ -58,11 +75,12 @@ const Chat = ({ display, roomId }) => {
                             ref={inputRef}
                             className="form-control"
                             placeholder="Enter message"
+                            onChange={(e) => changeMsg(e)}
                             onKeyUp={sendMessage}
                         />
 
                         <div className="input-group-append">
-                            <button className="btn btn-outline-secondary" onClick={sendMessage} >
+                            <button className="btn btn-outline-secondary" onClick={sendMessage2} >
                                 <i class="fa fa-paper-plane"></i>
                             </button>
                         </div>

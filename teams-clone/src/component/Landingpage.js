@@ -5,7 +5,7 @@ import shortid from "shortid";
 import './style.css';
 import 'font-awesome/css/font-awesome.min.css'
 import socket from '../socket';
-import random from 'random-name';
+// import random from 'random-name';
 
 const Landingpage = (props) => {
     const [err, setErr] = useState(false);
@@ -23,9 +23,9 @@ const Landingpage = (props) => {
             if (!error) {
                 const uid = shortid.generate();
                 const roomName = uid;
-                const userName =  'Admin';
-                console.log(roomName);
-                sessionStorage.setItem('user', userName);
+                // const userName =   random.first();
+                // console.log(roomName);
+                // sessionStorage.setItem('user', userName);
                 props.history.push(`/${roomName}`);
 
             } else {
