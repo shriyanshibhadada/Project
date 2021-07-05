@@ -9,3 +9,4 @@
 * Screen Share
 * chat respnosivity
 * chat feature outside Video call
+* remove participant
