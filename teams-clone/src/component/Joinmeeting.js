@@ -1,7 +1,6 @@
 import { useHistory } from 'react-router-dom';
 import React, { useRef, useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import shortid from "shortid";
 import './style.css';
 import 'font-awesome/css/font-awesome.min.css'
 import socket from '../socket';
@@ -15,8 +14,8 @@ const Landingpage = (props) => {
     useEffect(() => {
         socket.on('FE-error-user-exist', ({ error }) => {
             if (!error) {
-                const uid = shortid.generate();
-                const roomName = uid;
+                const temp = window.location.pathname.split('/')[1]
+                const roomName = `${temp}`;
                 var userName = userRef.current.value;
                 if(userName == '')
                 {
@@ -33,8 +32,7 @@ const Landingpage = (props) => {
     }, [props.history]);
 
     const startCall = () => {
-        const uid = shortid.generate();
-        const roomName = `${uid}`;
+        const roomName = `${window.location.pathname}`;
         const userName = 'fcmc5d444ccc';
 
         if (!roomName || !userName) {
@@ -54,7 +52,7 @@ const Landingpage = (props) => {
                     <div class="row justify-content-center">
                         <div class="col-xl-7 col-lg-9 text-center">
                             <h1>Teams Clone</h1>
-                            <h2>Click the button below to start a meeting</h2>
+                            <h2>Click the button below to join the meeting</h2>
                         </div>
                     </div>
                     <div class="text-center">
@@ -64,7 +62,7 @@ const Landingpage = (props) => {
                             </div>
                         </center>
 
-                        <div type="button" class="btn-get-started scrollto" onClick={startCall} >Start Meeting</div>
+                        <div type="button" class="btn-get-started scrollto" onClick={startCall} >Join Meeting</div>
                     </div>
 
                     <div class="row icon-boxes">

@@ -206,9 +206,20 @@ h1, h2, h3, h4, h5, h6 {
   padding: 14px 50px;
   border-radius: 5px;
   transition: 0.5s;
-  margin-top: 30px;
+  margin-top: 5px;
   color: #fff;
   background: #2487ce;
+}
+#hero .input-name {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  padding: 14px 50px;
+  border-radius: 5px;
+  transition: 0.5s;
+  margin-top: 30px;
 }
 
 #hero .btn-get-started:hover {

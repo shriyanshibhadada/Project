@@ -12,10 +12,17 @@ import socket from '../socket';
 
 const Meetingpage = (props) => {
 
-    const url = `${window.location.origin}${window.location.pathname}`;
-    const roomId = props.match.params.roomId;
-    const currentUser = random.first();
-    sessionStorage.setItem('user', currentUser);
+    const url = `${window.location.origin}/${window.location.pathname.split('/')[1]}`;
+    const roomId = props.match.params.id;
+    // console.log(roomId);
+    // const currentUser = random.first();
+    // sessionStorage.setItem('user', currentUser);
+    var currentUser = sessionStorage.getItem('user');
+    if(!currentUser)
+    {
+        currentUser = random.first();
+        sessionStorage.setItem('user', currentUser);
+    }
     const [peers, setPeers] = useState([]);
     const [userVideoAudio, setUserVideoAudio] = useState({
         localUser: { video: true, audio: true },
@@ -312,8 +319,8 @@ const Meetingpage = (props) => {
                                 <button type="button" class="btn btn-outline-light" onClick={() => navigator.clipboard.writeText(url)} >Copy Invite Link</button>
                                 <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='audio' >{userVideoAudio['localUser'].audio ? `Mute Audio` : `Unmute Audio`}</button>
                                 <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='video' >{userVideoAudio['localUser'].video ? `Hide video` : `show video`}</button>
-                                <button type="button" class="btn btn-outline-light" onClick={goToBack}>Leave Call</button>
                                 <button type="button" class="btn btn-outline-light" onClick={clickScreenSharing}>Share Screen</button>
+                                <button type="button" class="btn btn-outline-light" onClick={goToBack}>Leave Call</button>
                             </div>
                             <div className="position-absolute bottom-0 end-0 h-25 w-25">
                                 <video className="h-100 w-100" playsInline muted ref={userVideoRef} autoPlay />
