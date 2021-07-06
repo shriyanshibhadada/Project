@@ -7,9 +7,9 @@ This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/
 * chat feature
 * Hide video
 * Screen Share
+* Ask for user's name
 
 # Function to-do list
-* Ask for user's name
 * chat respnosivity
 * chat feature outside Video call
 * remove participant
