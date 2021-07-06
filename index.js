@@ -1,25 +1,27 @@
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-// const bodyParser = require('body-parser');
-const cors = require('Cors');
 const PORT = process.env.PORT || 5000;
 const path = require('path');
 const io = require('socket.io')(server);
 
 let socketList = {};
 
-//serve react port
-app.use(express.static(path.join(__dirname, 'teams-clone', 'build')));
+// //serve react port
+// app.use(express.static(path.join(__dirname, 'teams-clone', 'build')));
 
 //for deployment
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'teams-clone', 'build')))
+
+    app.get('/*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'teams-clone', 'build', 'index.html'));
+    });
 }
 
-app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'teams-clone', 'build', 'index.html'));
-});
+// app.get('/*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'teams-clone', 'build', 'index.html'));
+// });
 
 
 // Route
