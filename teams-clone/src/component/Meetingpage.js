@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState, useRef } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Peer from 'simple-peer';
 import React from 'react';
-import 'font-awesome/css/font-awesome.min.css'
+import 'font-awesome/css/font-awesome.min.css';
 import './style.css';
 import random from 'random-name';
 import VideoCard from './VideoCard';
@@ -12,18 +12,19 @@ import socket from '../socket';
 
 const Meetingpage = (props) => {
 
+    //current url with room id
     const url = `${window.location.origin}/${window.location.pathname.split('/')[1]}`;
+    //room id
     const roomId = props.match.params.id;
-    // console.log(roomId);
-    // const currentUser = random.first();
-    // sessionStorage.setItem('user', currentUser);
+    //user name
     var currentUser = sessionStorage.getItem('user');
+    // if username is not mentioned it will give a random name
     if(!currentUser)
     {
         currentUser = random.first();
         sessionStorage.setItem('user', currentUser);
     }
-    const [peers, setPeers] = useState([]);
+    const [peers, setPeers] = useState([]);// list of peers connected
     const [userVideoAudio, setUserVideoAudio] = useState({
         localUser: { video: true, audio: true },
     });
@@ -47,7 +48,7 @@ const Meetingpage = (props) => {
         // Set Back Button Event
         window.addEventListener('popstate', goToBack);
 
-        // Connect Camera & Mic
+        // Connect Camera & Mic webrtc
         navigator.mediaDevices
             .getUserMedia({ video: true, audio: true })
             .then((stream) => {
@@ -196,6 +197,7 @@ const Meetingpage = (props) => {
         return peersRef.current.find((p) => p.peerID === id);
     }
 
+    // this will get display incomming videos of all the peers connected 
     function createUserVideo(peer, index, arr) {
         // console.log(index);
         return (
@@ -223,6 +225,7 @@ const Meetingpage = (props) => {
         window.location.href = '/';
     };
 
+    // mute and unmute audio and hide and show your vid
     const toggleCameraAudio = (e) => {
         const target = e.target.getAttribute('data-switch');
 
@@ -254,6 +257,7 @@ const Meetingpage = (props) => {
         socket.emit('BE-toggle-camera-audio', { roomId, switchTarget: target });
     };
 
+    // screen sharing through webrtc
     const clickScreenSharing = () => {
         if (!screenShare) {
             navigator.mediaDevices
@@ -316,11 +320,12 @@ const Meetingpage = (props) => {
                                 {peers && peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
                             </div>
                             <div class="btn-group position-absolute bottom-0 start-0" role="group" aria-label="Basic outlined example">
-                                <button type="button" class="btn btn-outline-light" onClick={() => navigator.clipboard.writeText(url)} >Copy Invite Link</button>
-                                <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='audio' >{userVideoAudio['localUser'].audio ? `Mute Audio` : `Unmute Audio`}</button>
-                                <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='video' >{userVideoAudio['localUser'].video ? `Hide video` : `show video`}</button>
-                                <button type="button" class="btn btn-outline-light" onClick={clickScreenSharing}>Share Screen</button>
-                                <button type="button" class="btn btn-outline-light" onClick={goToBack}>Leave Call</button>
+                                <button type="button" class="btn btn-outline-light" onClick={() => navigator.clipboard.writeText(url)} ><i class = "fa fa-clipboard">{"  "}Copy</i></button>
+                                <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='audio' ><i class={userVideoAudio['localUser'].audio ? `fa fa-microphone` : `fa fa-microphone-slash`} /></button>
+                                <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='video' ><i class={userVideoAudio['localUser'].video ? `fa fa-eye` : `fa fa-eye-slash`} /></button>
+                                <button type="button" class="btn btn-outline-light" onClick={clickScreenSharing}><i class = "fa fa-desktop"></i></button>
+                                <button type="button" class="btn btn-outline-light" onClick={goToBack}><i class = "fa fa-sign-out">{"  "}Leave</i></button>
+                                {/* <FontAwesomeIcon icon={['fas', 'coffee']} /> */}
                             </div>
                             <div className="position-absolute bottom-0 end-0 h-25 w-25">
                                 <video className="h-100 w-100" playsInline muted ref={userVideoRef} autoPlay />

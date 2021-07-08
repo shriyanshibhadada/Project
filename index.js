@@ -7,9 +7,6 @@ const io = require('socket.io')(server);
 
 let socketList = {};
 
-// //serve react port
-// app.use(express.static(path.join(__dirname, 'teams-clone', 'build')));
-
 //for deployment
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, 'teams-clone', 'build')))
@@ -18,10 +15,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.join(__dirname, 'teams-clone', 'build', 'index.html'));
     });
 }
-
-// app.get('/*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'teams-clone', 'build', 'index.html'));
-// });
 
 
 // Route

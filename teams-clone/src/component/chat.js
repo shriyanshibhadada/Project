@@ -4,11 +4,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const Chat = ({ display, roomId }) => {
-    const currentUser = sessionStorage.getItem('user');
-    const [msg, setMsg] = useState([]);
-    const [tempMsg, setTempMsg] = useState([]);
-    const messagesEndRef = useRef(null);
-    const inputRef = useRef();
+
+    const currentUser = sessionStorage.getItem('user');//user name
+    const [msg, setMsg] = useState([]);// msg list
+    const [tempMsg, setTempMsg] = useState([]);// temporary update of msg typed using on change
+    const messagesEndRef = useRef(null);// reference to last msg for automatic scroll
+    const inputRef = useRef();// change the input box to empty string when msg is send
 
     useEffect(() => {
         socket.on('FE-receive-message', ({ msg, sender }) => {
@@ -23,6 +24,7 @@ const Chat = ({ display, roomId }) => {
         messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
+    // send msg when clicked enter
     const sendMessage = (e) => {
         if (e.key === 'Enter') {
             const msg = e.target.value;
@@ -39,6 +41,7 @@ const Chat = ({ display, roomId }) => {
         // console.log(tempMsg);
     };
 
+    // send msg when clicked send button
     const sendMessage2 = () => {
         console.log(tempMsg);
         const msg = tempMsg;
@@ -50,7 +53,7 @@ const Chat = ({ display, roomId }) => {
 
     //some css
     const fullheight = {
-        height: (window.innerHeight) * 95 / 100,
+        height: (window.innerHeight) * 90 / 100,
     };
 
     return (

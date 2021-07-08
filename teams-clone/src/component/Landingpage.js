@@ -18,8 +18,7 @@ const Landingpage = (props) => {
                 const uid = shortid.generate();
                 const roomName = uid;
                 var userName = userRef.current.value;
-                if(userName == '')
-                {
+                if (userName == '') {
                     userName = random.first();
                 }
                 sessionStorage.setItem('user', userName);
@@ -44,6 +43,17 @@ const Landingpage = (props) => {
             socket.emit('BE-check-user', { roomId: roomName, userName });
         }
     }
+    const startchat = () => {
+        const uid = shortid.generate();
+        const roomName = uid;
+        var userName = userRef.current.value;
+        if (userName == '') {
+            userName = random.first();
+        }
+        const chat = shortid.generate();
+        sessionStorage.setItem('user', userName);
+        props.history.push(`/${roomName}/${userName}/${chat}`);
+    }
 
 
     return (
@@ -60,11 +70,15 @@ const Landingpage = (props) => {
                     <div class="text-center">
                         <center>
                             <div class="input-name">
-                                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name"  ref={userRef}/>
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" ref={userRef} />
                             </div>
                         </center>
-
-                        <div type="button" class="btn-get-started scrollto" onClick={startCall} >Start Meeting</div>
+                        <div>
+                            <div type="button" class="row btn-get-started scrollto" onClick={startCall} >Start Meeting</div>
+                        </div>
+                        <div>
+                            <div type="button" class="row btn-get-started scrollto" onClick={startchat} >Start Chat</div>
+                        </div>
                     </div>
 
                     <div class="row icon-boxes">
@@ -87,16 +101,16 @@ const Landingpage = (props) => {
                         <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="zoom-in" data-aos-delay="400">
                             <div class="icon-box">
                                 <div class="icon"><i class="fa fa-volume-up"></i></div>
-                                <h4 class="title"><a href="">Mute audio</a></h4>
-                                <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+                                <h4 class="title"><a href="">Mute audio and video</a></h4>
+                                <p class="description">Anyone can easily mute and unmute their audio or hide their video.</p>
                             </div>
                         </div>
 
                         <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="zoom-in" data-aos-delay="500">
                             <div class="icon-box">
-                                <div class="icon"><i class="ri-fingerprint-line"></i></div>
-                                <h4 class="title"><a href="">Nemo Enim</a></h4>
-                                <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                                <div class="icon"><i class="fa fa-clipboard"></i></div>
+                                <h4 class="title"><a href="">Invite link</a></h4>
+                                <p class="description">Invite others to your online meeting, Send a link or meeting code to anyone you want to join the meeting.</p>
                             </div>
                         </div>
 
