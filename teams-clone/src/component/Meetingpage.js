@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Peer from 'simple-peer';
 import React from 'react';
@@ -19,8 +19,7 @@ const Meetingpage = (props) => {
     //user name
     var currentUser = sessionStorage.getItem('user');
     // if username is not mentioned it will give a random name
-    if(!currentUser)
-    {
+    if (!currentUser) {
         currentUser = random.first();
         sessionStorage.setItem('user', currentUser);
     }
@@ -31,12 +30,11 @@ const Meetingpage = (props) => {
     const [videoDevices, setVideoDevices] = useState([]);
     const [displayChat, setDisplayChat] = useState(false);
     const [screenShare, setScreenShare] = useState(false);
-    const [showVideoDevices, setShowVideoDevices] = useState(false);
     const peersRef = useRef([]);
     const userVideoRef = useRef();
     const screenTrackRef = useRef();
     const userStream = useRef();
-    
+
 
     useEffect(() => {
         // Get Video Devices
@@ -310,6 +308,9 @@ const Meetingpage = (props) => {
     };
     // css ends here
 
+
+    
+
     return (
         <div className="container">
             <div className="row" style={topmargin}>
@@ -320,11 +321,11 @@ const Meetingpage = (props) => {
                                 {peers && peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
                             </div>
                             <div class="btn-group position-absolute bottom-0 start-0" role="group" aria-label="Basic outlined example">
-                                <button type="button" class="btn btn-outline-light" onClick={() => navigator.clipboard.writeText(url)} ><i class = "fa fa-clipboard">{"  "}Copy</i></button>
-                                <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='audio' ><i class={userVideoAudio['localUser'].audio ? `fa fa-microphone` : `fa fa-microphone-slash`} /></button>
-                                <button type="button" class="btn btn-outline-light" onClick={toggleCameraAudio}  data-switch='video' ><i class={userVideoAudio['localUser'].video ? `fa fa-eye` : `fa fa-eye-slash`} /></button>
-                                <button type="button" class="btn btn-outline-light" onClick={clickScreenSharing}><i class = "fa fa-desktop"></i></button>
-                                <button type="button" class="btn btn-outline-light" onClick={goToBack}><i class = "fa fa-sign-out">{"  "}Leave</i></button>
+                                <button type="button" class="btn btn-outline-light" data-toggle="tooltip" data-placement="bottom" title="Copy invite link" onClick={() => navigator.clipboard.writeText(url)} ><i class="fa fa-clipboard"></i></button>
+                                <button type="button" class="btn btn-outline-light" data-toggle="tooltip" data-placement="top" title={userVideoAudio['localUser'].audio ? `Mute Audio` : `Unmute audio`} onClick={toggleCameraAudio} data-switch='audio' ><i class={userVideoAudio['localUser'].audio ? `fa fa-microphone` : `fa fa-microphone-slash`} /></button>
+                                <button type="button" class="btn btn-outline-light" data-toggle="tooltip" data-placement="top" title={userVideoAudio['localUser'].video ? `Hide video` : `Show video`} onClick={toggleCameraAudio} data-switch='video' ><i class={userVideoAudio['localUser'].video ? `fa fa-eye` : `fa fa-eye-slash`} /></button>
+                                <button type="button" class="btn btn-outline-light" data-toggle="tooltip" data-placement="top" title="Share screen" onClick={clickScreenSharing}><i class="fa fa-desktop"></i></button>
+                                <button type="button" class="btn btn-outline-light" data-toggle="tooltip" data-placement="top" title="Leave Call" onClick={goToBack}><i class="fa fa-sign-out"></i></button>
                                 {/* <FontAwesomeIcon icon={['fas', 'coffee']} /> */}
                             </div>
                             <div className="position-absolute bottom-0 end-0 h-25 w-25">
@@ -334,7 +335,7 @@ const Meetingpage = (props) => {
                     </div>
                 </div>
                 <div className="col-3">
-                    <Chat display={displayChat} roomId={roomId} />
+                    <Chat display={displayChat} roomId={roomId} style={fullheight} />
                 </div>
             </div>
         </div >

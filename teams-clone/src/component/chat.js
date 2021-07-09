@@ -58,7 +58,7 @@ const Chat = ({ display, roomId }) => {
 
     return (
         <div className="row" className={display ? '' : 'width0'}>
-            <div className="col-12 bg-light position-relative" style={fullheight}>
+            <div className="col-12 bg-light position-relative" style={fullheight} >
                 <div className="h-100 w-100 overflow-auto">
                     {/* {console.log(msg)} */}
                     {msg &&

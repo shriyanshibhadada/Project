@@ -1,4 +1,3 @@
-import { useHistory } from 'react-router-dom';
 import React, { useRef, useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';

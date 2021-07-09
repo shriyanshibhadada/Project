@@ -1,4 +1,3 @@
-
 import { useHistory } from 'react-router-dom';
 import { useEffect, useState, useRef } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -186,7 +185,7 @@ const Meetingpage = (props) => {
     const continuemeet = () => {
         var userName = sessionStorage.getItem('user');
         const roomName = window.location.pathname.split('/')[1];
-        history.push(`/${roomName}/${userName}`);
+        props.history.push(`/${roomName}/${userName}`);
         window.location.reload();
     }
 
@@ -205,7 +204,7 @@ const Meetingpage = (props) => {
     return (
         <div className="container">
             <div className="row" style={topmargin}>
-                <div className="col-12">
+                <div className="col-12" style={fullheight}>
                     <Chat display={displayChat} roomId={roomId} />
                     <button type="button" class="btn btn-outline-secondary" onClick={() => navigator.clipboard.writeText(url)} >Copy Invite Link</button>
                     <button type="button" class="btn btn-outline-success" onClick={continuemeet}>Join Video call</button>
