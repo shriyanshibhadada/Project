@@ -1,16 +1,47 @@
 # Teams-clone
 This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/
 
-# Current Functions
-* Mute Audio
-* Copy invite link
-* chat feature
-* Hide video
-* Screen Share
-* Ask for user's name
-* chat feature outside Video call
+# Features
+* Input Name
+* Copy Invite Link
+* Audio Mute/Unmute
+* Video On/Off
+* Share Screen
+* Chat Feature
+* Group Call
 
-# Function to-do list
+# Agile Implementation
+* Learn
+* Chose the tools and technologies and designed a basic prototype
+* Add more features + Test and fix bugs
+
+# Technologies used
+* Node express server
+* React frontend
+* WebRTC
+* Socket.io
+* Simple-peer
+* Bootstrap
+
+# Setup
+### Server setup
+* npm i
+* nodemon
+
+### client setup
+* cd teams-clone
+* npm i
+* npm start
+
+# Todo
 * chat respnosivity
 * remove participant
 * List of people in the call
+
+# References
+* https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
+* https://github.com/Hyunse/video-group-meeting/tree/master/client/src/components
+* https://github.com/akkii922/google-meet-clone
+* https://github.com/webrtc/samples
+* https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC
+
