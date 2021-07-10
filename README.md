@@ -35,6 +35,7 @@ This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/
 `npm start`
 
 # Todo
+* TURN server
 * Chat responsivity
 * Remove participant
 * List of people in the call
