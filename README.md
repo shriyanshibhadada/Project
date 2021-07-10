@@ -44,4 +44,5 @@ This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/
 * https://github.com/akkii922/google-meet-clone
 * https://github.com/webrtc/samples
 * https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC
+* https://www.favicon-generator.org/
 
