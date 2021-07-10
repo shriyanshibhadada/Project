@@ -24,6 +24,7 @@ This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/
 * Bootstrap
 
 # Setup
+`git clone git@github.com:shriyanshibhadada/Project.git`
 ### Server setup
 `npm i`\
 `nodemon`
