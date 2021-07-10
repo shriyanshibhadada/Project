@@ -40,7 +40,7 @@ This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/
 
 # References
 * https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
-* https://github.com/Hyunse/video-group-meeting/tree/master/client/src/components
+* https://github.com/Hyunse/video-group-meeting
 * https://github.com/akkii922/google-meet-clone
 * https://github.com/webrtc/samples
 * https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC
