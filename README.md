@@ -25,13 +25,13 @@ This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/
 
 # Setup
 ### Server setup
-* npm i
-* nodemon
+`npm i`\
+`nodemon`
 
 ### client setup
-* cd teams-clone
-* npm i
-* npm start
+`cd teams-clone`\
+`npm i`\
+`npm start`
 
 # Todo
 * Chat responsivity
