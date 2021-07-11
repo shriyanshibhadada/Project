@@ -1,4 +1,5 @@
 # Teams-clone
+Made for Microsoft Engage'21 \
 This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/ \
 Link to the [Product Demo](https://drive.google.com/file/d/1jagvUjupJ_huRA-VtS2uBg2tIy1ELuHj/view?usp=sharing)
 
@@ -12,9 +13,13 @@ Link to the [Product Demo](https://drive.google.com/file/d/1jagvUjupJ_huRA-VtS2u
 * Group Call
 
 # Agile Implementation
-* Learn
+### Week 1
+* Learn and Design
 * Chose the tools and technologies and designed a basic prototype
-* Add more features + Test and fix bugs
+### Week 2 and 3
+* Added more features, Eg. Screen share, mute Audio/video, Chat etc
+### Week 4
+* Chat Feature Improved and Documentation updates.
 
 # Technologies used
 * Node express server
@@ -30,7 +35,7 @@ Link to the [Product Demo](https://drive.google.com/file/d/1jagvUjupJ_huRA-VtS2u
 `npm i`\
 `nodemon`
 
-### client setup
+### Client setup
 `cd teams-clone`\
 `npm i`\
 `npm start`
