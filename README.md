@@ -4,13 +4,16 @@ This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/ \
 Link to the [Product Demo](https://drive.google.com/file/d/1jagvUjupJ_huRA-VtS2uBg2tIy1ELuHj/view?usp=sharing)
 
 # Features
-* Input Name
-* Copy Invite Link
-* Audio Mute/Unmute
-* Video On/Off
-* Share Screen
-* Chat Feature
-* Group Call
+#### Input Name
+* If left empty, A random name will be assigned
+#### Chat Feature
+* User can chat before as well as during the call
+#### Group Call
+* Upto 5 people can engage in group call and chat
+#### Copy Invite Link
+#### Audio Mute/Unmute
+#### Video On/Off
+#### Share Screen
 
 # Agile Implementation
 ### Week 1
