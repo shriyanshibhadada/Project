@@ -1,5 +1,6 @@
 # Teams-clone
-This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/
+This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/ \
+Link to the [Product Demo](https://drive.google.com/file/d/1jagvUjupJ_huRA-VtS2uBg2tIy1ELuHj/view?usp=sharing)
 
 # Features
 * Input Name
