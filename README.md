@@ -58,7 +58,6 @@ Link to the [Product Demo](https://www.youtube.com/watch?v=Tzl4bdJCd0o)
 * https://github.com/webrtc/samples
 * https://github.com/WebDevSimplified/Zoom-Clone-With-WebRTC
 * https://www.favicon-generator.org/
-* https://peerjs.com/
 * https://socket.io/
 
 # License
