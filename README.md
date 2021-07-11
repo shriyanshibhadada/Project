@@ -8,6 +8,7 @@ Link to the [Product Demo](https://drive.google.com/file/d/1jagvUjupJ_huRA-VtS2u
 * If left empty, A random name will be assigned
 #### Chat Feature
 * User can chat before as well as during the call
+* Equipped with auto-scroll
 #### Group Call
 * Upto 5 people can engage in group call and chat
 #### Copy Invite Link
