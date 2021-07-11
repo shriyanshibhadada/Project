@@ -15,6 +15,7 @@ Link to the [Product Demo](https://drive.google.com/file/d/1jagvUjupJ_huRA-VtS2u
 #### Audio Mute/Unmute
 #### Video On/Off
 #### Share Screen
+#### Responsive
 
 # Agile Implementation
 ### Week 1
