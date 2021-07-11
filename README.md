@@ -1,7 +1,7 @@
 # Teams-clone
 Made for Microsoft Engage'21 \
 This project is deployed at https://teamsclonebyshriyanshi.herokuapp.com/ \
-Link to the [Product Demo](https://drive.google.com/file/d/1jagvUjupJ_huRA-VtS2uBg2tIy1ELuHj/view?usp=sharing)
+Link to the [Product Demo](https://www.youtube.com/watch?v=Tzl4bdJCd0o)
 
 # Features
 #### Input Name
